@@ -29,7 +29,7 @@ Usage
 If you are using ```bionode-fasta``` with Node.js, you can require the module:
 
 ```js
-var bionode-fasta = require('bionode-fasta')
+var bionodeFasta = require('bionode-fasta')
 //Sample FASTA file
 console.log(sampleFASTA);
 => >SEQUENCE_1
@@ -41,7 +41,7 @@ console.log(sampleFASTA);
    SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQI
    ATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH
 
-bionode.readFasta(sampleFASTA);
+bionodeFasta.readFasta(sampleFASTA);
 => [ { name: 'SEQUENCE_1',
        seq: 'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKIPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTLMGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL' },
      { name: 'SEQUENCE_2',
@@ -52,7 +52,7 @@ Please read the [documentation](http://rawgit.com/alanrice/bionode-fasta/master/
 
 ### Command line examples
 ```sh
-$ bionode-fasta ~/sequences.fa
+$ bionode-fasta readFasta ~/sequences.fa
 ```
 
 License
