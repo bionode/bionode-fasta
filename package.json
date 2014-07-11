@@ -12,5 +12,20 @@
     "bionode"
   ],
   "author": "Alan Rice",
-  "license": "MIT"
+  "license": "MIT",
+  "bin": {
+    "bionode-template": "cli.js"
+  },
+  "devDependencies": {
+    "coveralls": "~2.11.1",
+    "docco": "~0.6.3",
+    "istanbul": "~0.3.0",
+    "mocha": "~1.20.1",
+    "mocha-lcov-reporter": "0.0.1",
+    "should": "~4.0.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/alanrice/bionode-fasta.git"
+  },
 }
