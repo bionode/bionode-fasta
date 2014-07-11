@@ -1,0 +1,16 @@
+{
+  "name": "bionode-fasta",
+  "version": "0.1.0",
+  "description": "FASTA parser for bionode",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec",
+  },
+  "keywords": [
+    "bioinformatics",
+    "fasta",
+    "bionode"
+  ],
+  "author": "Alan Rice",
+  "license": "MIT"
+}
