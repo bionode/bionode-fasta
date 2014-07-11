@@ -13,14 +13,20 @@ describe("read FASTA format", function() {
 
 describe("read aligned FASTA format", function() {
   it("should return an array of sequence objects for alignment", function(done) {
-    bionodeFasta.readFasta(data.fastaFormat).should.eql(data.fastaArray)
+    bionodeFasta.readFasta(data.fastaAligned).should.eql(data.fastaAlignedArray)
     done()
   })
 })
 
- describe("create FASTA format", function() {
-   it("should return a string in FASTA format", function(done) {
-     bionodeFasta.createFasta(data.fastaArray).should.eql(data.fastaFormat)
-     done()
-   })
- })
+describe("create FASTA format", function() {
+  it("should return a string in FASTA format", function(done) {
+    bionodeFasta.createFasta(data.fastaArray).should.eql(data.fastaFormat)
+    done()
+  })
+})
+describe("create FASTA format - aligned", function() {
+  it("should return a string in FASTA format", function(done) {
+    bionodeFasta.createFasta(data.fastaAlignedArray, true).should.eql(data.fastaAligned)
+    done()
+  })
+})
