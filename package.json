@@ -4,7 +4,7 @@
   "description": "FASTA parser for bionode",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec",
+    "test": "mocha --reporter spec"
   },
   "keywords": [
     "bioinformatics",
@@ -14,7 +14,10 @@
   "author": "Alan Rice",
   "license": "MIT",
   "bin": {
-    "bionode-template": "cli.js"
+    "bionode-fasta": "cli.js"
+  },
+  "dependencies": {
+    "bionode": "bionode/bionode"
   },
   "devDependencies": {
     "coveralls": "~2.11.1",
@@ -27,5 +30,5 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/alanrice/bionode-fasta.git"
-  },
+  }
 }
