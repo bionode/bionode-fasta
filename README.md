@@ -55,11 +55,6 @@ Please read the [documentation](http://rawgit.com/alanrice/bionode-fasta/master/
 $ bionode-fasta ~/sequences.fa
 ```
 
-### Usage with [Dat](http://dat-data.com)
-```sh
-echo World | bionode-template greet | dat import --json
-```
-
 License
 --------
 
