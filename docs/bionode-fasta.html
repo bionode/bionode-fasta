@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>bionode-fasta.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>bionode-fasta.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports = exports = bionodeFasta = <span class="hljs-keyword">new</span> BionodeFasta()
+bionode = <span class="hljs-built_in">require</span>(<span class="hljs-string">'bionode'</span>)
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">BionodeFasta</span><span class="hljs-params">()</span> </span>{}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2 id="fasta-format-functions">Fasta format functions</h2>
+<hr>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h3 id="read-sequence-alignment-format">Read sequence/alignment format</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Read sequence/alignment format and create array of sequence objects. If <code>aligned</code> is true or <code>-</code> characters present in sequences, an unaligned <code>seq</code> key is created as well as preserving the aligned sequence in <code>aligned</code>.</p>
+<pre><code><span class="hljs-comment">//Sample FASTA file</span>
+<span class="hljs-built_in">console</span>.log(sampleFASTA);
+=&gt; &gt;SEQUENCE_1
+   MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG
+   LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK
+   IPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTL
+   MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL
+   &gt;SEQUENCE_2
+   SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQI
+   ATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH
+
+bionodeFasta.readFasta(sampleFASTA);
+=&gt; [ { name: <span class="hljs-string">'SEQUENCE_1'</span>,
+       seq: <span class="hljs-string">'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKIPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTLMGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL'</span> },
+     { name: <span class="hljs-string">'SEQUENCE_2'</span>,
+       seq: <span class="hljs-string">'SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQIATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH'</span> } ]
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>BionodeFasta.prototype.readFasta = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(input, sequenceType, aligned)</span> </span>{
+  <span class="hljs-keyword">var</span> lines = input.toString().split(<span class="hljs-string">"\n"</span>)
+  <span class="hljs-keyword">var</span> object = {}
+  <span class="hljs-keyword">var</span> array = []
+  <span class="hljs-keyword">var</span> containsGap = <span class="hljs-literal">false</span>
+
+  <span class="hljs-keyword">var</span> current = <span class="hljs-string">""</span>
+  lines.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(line)</span></span>{
+    <span class="hljs-keyword">if</span> (line.match(<span class="hljs-regexp">/(^&gt;)/</span>)){
+      current = line.substring(<span class="hljs-number">1</span>)
+      object[current] = <span class="hljs-string">""</span>
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(line.match(<span class="hljs-regexp">/(-)/</span>)){
+      containsGap = <span class="hljs-literal">true</span>
+      object[current] = object[current].concat(line)
+    }
+    <span class="hljs-keyword">else</span>{
+      object[current] = object[current].concat(line)
+    }
+  })
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> object) {
+    <span class="hljs-keyword">if</span> (!sequenceType){
+      sequenceType = bionode.checkSequenceType(object[key].replace(<span class="hljs-regexp">/-/g</span>,<span class="hljs-string">""</span>))
+    }
+    <span class="hljs-keyword">if</span>(aligned || containsGap){
+      array.push({name: key, seqType: sequenceType, seq: object[key].replace(<span class="hljs-regexp">/-/g</span>,<span class="hljs-string">""</span>), aligned: object[key]})
+    }
+    <span class="hljs-keyword">else</span>{
+      array.push({name: key, seq: object[key], seqType: sequenceType})
+    }
+  }
+  <span class="hljs-keyword">return</span> array
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h3 id="create-sequence-alignment-format">Create sequence/alignment format</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Create sequence/alignment format from an array of sequence objects</p>
+<pre><code><span class="hljs-comment">//Sample sequence array</span>
+<span class="hljs-built_in">console</span>.log(sequences);
+=&gt; [ { name: <span class="hljs-string">'SEQUENCE_1'</span>,
+       seq: <span class="hljs-string">'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKIPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTLMGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL'</span> },
+     { name: <span class="hljs-string">'SEQUENCE_2'</span>,
+       seq: <span class="hljs-string">'SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQIATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH'</span> } ]
+
+bionodeFasta.createFormat(sequences);
+=&gt; &gt;SEQUENCE_1
+   MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG
+   LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK
+   IPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTL
+   MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL
+   &gt;SEQUENCE_2
+   SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQI
+   ATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>BionodeFasta.prototype.createFasta = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(sequenceArray, aligned)</span> </span>{
+  <span class="hljs-keyword">var</span> string = <span class="hljs-string">""</span>
+  sequenceArray.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(sequence)</span></span>{
+    string += <span class="hljs-string">"&gt;"</span>+sequence.name+<span class="hljs-string">"\n"</span>
+    <span class="hljs-keyword">var</span> lines = [];
+    <span class="hljs-keyword">if</span> (aligned &amp;&amp; sequence.aligned){
+      lines = sequence.aligned.match(<span class="hljs-regexp">/.{1,60}/g</span>)
+    }
+    <span class="hljs-keyword">else</span>{
+      lines = sequence.seq.match(<span class="hljs-regexp">/.{1,60}/g</span>)
+    }
+    lines.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(line)</span></span>{
+      string += line+<span class="hljs-string">"\n"</span>
+    })
+  })
+  <span class="hljs-keyword">return</span> string.slice(<span class="hljs-number">0</span>, -<span class="hljs-number">1</span>)
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

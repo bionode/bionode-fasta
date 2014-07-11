@@ -8,7 +8,7 @@
     "coverage": "istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec && rm -rf ./coverage",
     "coveralls": "istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
     "build-browser": "webpack",
-    "build-docs": "docco ./lib/bionode.js"
+    "build-docs": "docco ./lib/bionode-fasta.js"
   },
   "keywords": [
     "bioinformatics",
