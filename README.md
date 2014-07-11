@@ -5,7 +5,7 @@
   <br/>
   <a href="http://bionode.io/">bionode.io</a>
 </p>
-# bionode-fasta
+# bionode-fasta [![Build status](https://travis-ci.org/alanrice/bionode-fasta.svg?branch=master "Build status")](https://travis-ci.org/alanrice/bionode-fasta)
 
 
 > FASTA format parser for bionode
