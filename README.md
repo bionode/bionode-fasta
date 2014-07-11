@@ -48,7 +48,7 @@ bionodeFasta.readFasta(sampleFASTA);
        seq: 'SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQIATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH' } ]
 ```
 
-Please read the [documentation](http://rawgit.com/alanrice/bionode-fasta/master/docs/bionode-fasta.html) for the methods exposed by bionode-template.
+Please read the [documentation](http://rawgit.com/alanrice/bionode-fasta/master/docs/bionode-fasta.html) for the methods exposed by bionode-fasta.
 
 ### Command line examples
 ```sh
@@ -58,5 +58,5 @@ $ bionode-fasta readFasta ~/sequences.fa
 License
 --------
 
-bionode-fasta is licensed under the [MIT](https://raw.github.com/bionode/bionode-template/master/LICENSE) license.  
+bionode-fasta is licensed under the [MIT](https://raw.github.com/bionode/bionode-fasta/master/LICENSE) license.  
 Check [ChooseALicense.com](http://choosealicense.com/licenses/mit) for details.
