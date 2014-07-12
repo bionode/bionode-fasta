@@ -5,7 +5,7 @@
   <br/>
   <a href="http://bionode.io/">bionode.io</a>
 </p>
-# bionode-fasta [![Build status](https://travis-ci.org/alanrice/bionode-fasta.svg?branch=master "Build status")](https://travis-ci.org/alanrice/bionode-fasta)
+# bionode-fasta [![Build status](https://travis-ci.org/bionode/bionode-fasta.svg?branch=master "Build status")](https://travis-ci.org/bionode/bionode-fasta)
 
 
 > FASTA format parser for bionode
@@ -48,12 +48,46 @@ bionodeFasta.readFasta(sampleFASTA);
        seq: 'SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQIATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH' } ]
 ```
 
-Please read the [documentation](http://rawgit.com/alanrice/bionode-fasta/master/docs/bionode-fasta.html) for the methods exposed by bionode-fasta.
+Please read the [documentation](http://rawgit.com/bionode/bionode-fasta/master/docs/bionode-fasta.html) for the methods exposed by bionode-fasta.
 
 ### Command line examples
 ```sh
 $ bionode-fasta readFasta ~/sequences.fa
 ```
+
+Contributing
+------------
+
+To contribute, clone this repo locally and commit your code on a separate branch.
+
+Please write unit tests for your code, and check that everything works by running the following before opening a pull-request:
+
+```sh
+$ npm test
+```
+
+Please also check for code coverage:
+
+```sh
+$ npm run coverage
+```
+
+To rebuild and minify the module for the browser:
+
+```sh
+$ npm run build-browser
+```
+
+To rebuild the documentation using the comments in the code:
+
+```sh
+$ npm run build-docs
+```
+Check the [issues](http://github.com/bionode/bionode-fasta/issues) for ways to contribute.
+
+Contacts
+--------
+Alan Rice <[alanmrice@gmail.com](mailto:alanmrice@gmail.com)> [@alanmrice](//twitter.com/alanmrice)
 
 License
 --------

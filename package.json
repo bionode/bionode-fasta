@@ -39,6 +39,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/alanrice/bionode-fasta.git"
+    "url": "git://github.com/bionode/bionode-fasta.git"
   }
 }
