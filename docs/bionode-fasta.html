@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>bionode-fasta.js</title>
+  <title>bionode-fasta</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -13,12 +13,6 @@
     
     <ul class="sections">
         
-          <li id="title">
-              <div class="annotation">
-                  <h1>bionode-fasta.js</h1>
-              </div>
-          </li>
-        
         
         
         <li id="section-1">
@@ -27,13 +21,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports = exports = bionodeFasta = <span class="hljs-keyword">new</span> BionodeFasta()
-bionode = <span class="hljs-built_in">require</span>(<span class="hljs-string">'bionode'</span>)
+              <h1 id="bionode-fasta">bionode-fasta</h1>
+<blockquote>
+<p>Streamable FASTA parser.</p>
+<p>doi: <a href="?">?</a>
+authors: <a href="http://alanrice.ie">Alan Rice</a> and <a href="http://bmpvieira.com">Bruno Vieira</a>
+emails: <a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#97;&#x6c;&#x61;&#x6e;&#109;&#x72;&#x69;&#99;&#x65;&#x40;&#103;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#x63;&#111;&#x6d;">&#97;&#x6c;&#x61;&#x6e;&#109;&#x72;&#x69;&#99;&#x65;&#x40;&#103;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#x63;&#111;&#x6d;</a> and <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#111;&#x3a;&#109;&#97;&#105;&#x6c;&#64;&#98;&#x6d;&#112;&#x76;&#x69;&#x65;&#x69;&#114;&#97;&#x2e;&#x63;&#x6f;&#x6d;">&#109;&#97;&#105;&#x6c;&#64;&#98;&#x6d;&#112;&#x76;&#x69;&#x65;&#x69;&#114;&#97;&#x2e;&#x63;&#x6f;&#x6d;</a>
+license: <a href="https://raw.githubusercontent.com/bionode/bionode-fasta/master/LICENSE">MIT</a></p>
+</blockquote>
+<hr>
 
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">BionodeFasta</span><span class="hljs-params">()</span> </span>{}</pre></div></div>
+            </div>
             
         </li>
         
@@ -44,10 +42,27 @@ bionode = <span class="hljs-built_in">require</span>(<span class="hljs-string">'
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h2 id="fasta-format-functions">Fasta format functions</h2>
-<hr>
+              <h2 id="usage">Usage</h2>
+<p>This module can be used in Node.js as described further below, or as a command line tool.
+Examples:</p>
+<pre><code>$ npm install -g bionode-fasta
 
+# bionode-fasta [options] [input file] [output file]
+$ bionode-fasta input.fasta.gz output.json
+
+# You can also use fasta files compressed <span class="hljs-keyword">with</span> gzip
+# If no output is provided, the result will be printed to stdout
+# Options: -p, --path: Includes the path of the original file as a property of the output objects
+</code></pre>
             </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>)
+<span class="hljs-keyword">var</span> zlib = <span class="hljs-built_in">require</span>(<span class="hljs-string">'zlib'</span>)
+<span class="hljs-keyword">var</span> split = <span class="hljs-built_in">require</span>(<span class="hljs-string">'split'</span>)
+<span class="hljs-keyword">var</span> through = <span class="hljs-built_in">require</span>(<span class="hljs-string">'through2'</span>)
+<span class="hljs-keyword">var</span> pumpify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'pumpify'</span>)
+<span class="hljs-keyword">var</span> concat = <span class="hljs-built_in">require</span>(<span class="hljs-string">'concat-stream'</span>)</pre></div></div>
             
         </li>
         
@@ -58,143 +73,192 @@ bionode = <span class="hljs-built_in">require</span>(<span class="hljs-string">'
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h3 id="read-sequence-alignment-format">Read sequence/alignment format</h3>
+              <h2 id="fasta">Fasta</h2>
+<p>Returns a Writable Stream that parses a FASTA content Buffer into a JSON Buffer
+    var fasta = require(‘bionode-fasta’)</p>
+<pre><code>fs.createReadStream(<span class="hljs-string">'./input.fasta'</span>)
+.pipe(fasta())
+.pipe(process.stdout)
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Read sequence/alignment format and create array of sequence objects. If <code>aligned</code> is true or <code>-</code> characters present in sequences, an unaligned <code>seq</code> key is created as well as preserving the aligned sequence in <code>aligned</code>.</p>
-<pre><code><span class="hljs-comment">//Sample FASTA file</span>
-<span class="hljs-built_in">console</span>.log(sampleFASTA);
-=&gt; &gt;SEQUENCE_1
-   MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG
-   LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK
-   IPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTL
-   MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL
-   &gt;SEQUENCE_2
-   SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQI
-   ATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH
+=&gt; { <span class="hljs-string">"id"</span>: <span class="hljs-string">"contig1"</span>,
+     <span class="hljs-string">"seq"</span>: <span class="hljs-string">"AGTCATGACTGACGTACGCATG"</span> }
+=&gt; { <span class="hljs-string">"id"</span>: <span class="hljs-string">"contig2"</span>,
+     <span class="hljs-string">"seq"</span>: <span class="hljs-string">"ATGTACGTACTGCATGC"</span> }
+=&gt; [...]
+</code></pre><p>Can also parse content from filenames Strings streamed to it</p>
+<pre><code>fs.createReadStream(<span class="hljs-string">'./fasta-list.txt'</span>)
+.pipe(split())
+.pipe(fasta({filenameMode: <span class="hljs-literal">true</span>}))
+.pipe(process.stdout)
+</code></pre><p>When filenames are Streamed like in the previous example, or passed directly
+to the parser Stream, they can be added to the output Objects</p>
+<pre><code>fasta({includePath: <span class="hljs-literal">true</span>}, <span class="hljs-string">'./input.fasta'</span>)
+.pipe(process.stdout)
 
-bionodeFasta.readFasta(sampleFASTA);
-=&gt; [ { name: <span class="hljs-string">'SEQUENCE_1'</span>,
-       seq: <span class="hljs-string">'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKIPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTLMGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL'</span> },
-     { name: <span class="hljs-string">'SEQUENCE_2'</span>,
-       seq: <span class="hljs-string">'SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQIATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH'</span> } ]
+=&gt; { <span class="hljs-string">"id"</span>: <span class="hljs-string">"contig1"</span>,
+     <span class="hljs-string">"seq"</span>: <span class="hljs-string">"AGTCATGACTGACGTACGCATG"</span> }
+     <span class="hljs-string">"path"</span>: <span class="hljs-string">"./input.fasta"</span> }
+</code></pre><p>The output from the parser can also be available as Objects instead of Buffers</p>
+<pre><code>fasta({objectMode: <span class="hljs-literal">true</span>}, <span class="hljs-string">'./input.fasta'</span>)
+.on(<span class="hljs-string">'data'</span>, <span class="hljs-built_in">console</span>.log)
+</code></pre><p>Shortcut version of previous example</p>
+<pre><code>fasta.obj(<span class="hljs-string">'./input.fasta'</span>).on(<span class="hljs-string">'data'</span>, <span class="hljs-built_in">console</span>.log)
+</code></pre><p>Callback style can also be used, however it might not be the best for large files</p>
+<pre><code>fasta.obj(<span class="hljs-string">'./input.fasta'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> </span>{
+  <span class="hljs-built_in">console</span>.log(data)
+})
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>BionodeFasta.prototype.readFasta = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(input, sequenceType, aligned)</span> </span>{
-  <span class="hljs-keyword">var</span> lines = input.toString().split(<span class="hljs-string">"\n"</span>)
-  <span class="hljs-keyword">var</span> object = {}
-  <span class="hljs-keyword">var</span> array = []
-  <span class="hljs-keyword">var</span> containsGap = <span class="hljs-literal">false</span>
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-built_in">module</span>.exports = fasta
 
-  <span class="hljs-keyword">var</span> current = <span class="hljs-string">""</span>
-  lines.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(line)</span></span>{
-    <span class="hljs-keyword">if</span> (line.match(<span class="hljs-regexp">/(^&gt;)/</span>)){
-      current = line.substring(<span class="hljs-number">1</span>)
-      object[current] = <span class="hljs-string">""</span>
+<span class="hljs-built_in">module</span>.exports.obj = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(arg1, arg2, arg3)</span> </span>{
+  <span class="hljs-keyword">var</span> params = paramsParser(arg1, arg2, arg3)
+  params.options.objectMode = <span class="hljs-literal">true</span>
+  <span class="hljs-keyword">var</span> stream = fasta(params.options, params.filename, params.callback)
+  <span class="hljs-keyword">return</span> stream
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fasta</span><span class="hljs-params">(arg1, arg2, arg3)</span> </span>{
+  <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>
+  <span class="hljs-keyword">var</span> params = paramsParser(arg1, arg2, arg3)
+
+  <span class="hljs-keyword">var</span> jsparse
+  <span class="hljs-keyword">var</span> contentParser
+  <span class="hljs-keyword">if</span> (params.options.objectMode) {
+    contentParser = pumpify.obj(split(), fastaParser(), jsParse())
+  }
+  <span class="hljs-keyword">else</span> {
+    contentParser = pumpify(split(), fastaParser())
+  }
+
+  <span class="hljs-keyword">var</span> filesParser = through.obj(transform)
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transform</span><span class="hljs-params">(obj, enc, next)</span></span>{
+    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> unzip = <span class="hljs-string">'gz'</span> === obj.split(<span class="hljs-string">'.'</span>).pop() ? zlib.Gunzip() : through()
+    <span class="hljs-keyword">var</span> path = params.options.includePath ? includePath(obj) : through()
+
+    <span class="hljs-keyword">var</span> jsparse, pumpit
+    <span class="hljs-keyword">if</span> (params.options.objectMode) {
+      jsparse =  jsParse()
+      pumpit = pumpify.obj
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(line.match(<span class="hljs-regexp">/(-)/</span>)){
-      containsGap = <span class="hljs-literal">true</span>
-      object[current] = object[current].concat(line)
+    <span class="hljs-keyword">else</span> {
+      jsparse = through()
+      pumpit = pumpify
     }
-    <span class="hljs-keyword">else</span>{
-      object[current] = object[current].concat(line)
+
+    <span class="hljs-keyword">var</span> pipeline = pumpit(
+      fs.createReadStream(obj),
+      unzip,
+      split(),
+      fastaParser(),
+      path,
+      jsparse
+    )
+
+    pipeline
+    .on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(error)</span> </span>{ self.emit(<span class="hljs-string">'error'</span>, error) })
+    .on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> </span>{ self.push(data) })
+    .on(<span class="hljs-string">'end'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ self.push(<span class="hljs-literal">null</span>) })
+
+    next()
+  }
+
+  stream = params.filename || params.options.filenameMode ? filesParser : contentParser
+  <span class="hljs-keyword">if</span> (params.filename) { stream.write(params.filename) }
+  <span class="hljs-keyword">if</span> (params.callback) {
+    stream.on(<span class="hljs-string">'error'</span>, params.callback)
+    stream.pipe(concat(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> </span>{ params.callback(<span class="hljs-literal">null</span>, data) }))
+  }
+
+  <span class="hljs-keyword">return</span> stream
+}
+
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">includePath</span><span class="hljs-params">(path)</span> </span>{
+  <span class="hljs-keyword">var</span> stream = through(transform)
+  <span class="hljs-keyword">return</span> stream
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transform</span><span class="hljs-params">(buf, enc, next)</span> </span>{
+    <span class="hljs-keyword">var</span> openEnd = buf.slice(<span class="hljs-number">0</span>, buf.length-<span class="hljs-number">2</span>)
+    <span class="hljs-keyword">var</span> pathBuf = <span class="hljs-keyword">new</span> Buffer(<span class="hljs-string">',"path":"'</span> + path + <span class="hljs-string">'"}\n'</span>)
+    <span class="hljs-keyword">var</span> totalLen = buf.length-<span class="hljs-number">2</span> + pathBuf.length
+    <span class="hljs-keyword">var</span> newBuf = Buffer.concat([openEnd, pathBuf], totalLen)
+    <span class="hljs-keyword">this</span>.push(newBuf)
+    next()
+  }
+}
+
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">jsParse</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> stream = through.obj(transform, flush)
+  <span class="hljs-keyword">return</span> stream
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transform</span><span class="hljs-params">(obj, enc, next)</span> </span>{
+    <span class="hljs-keyword">this</span>.push(<span class="hljs-built_in">JSON</span>.parse(obj))
+    next()
+  }
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">flush</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">this</span>.push(<span class="hljs-literal">null</span>) }
+}
+
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fastaParser</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> cacheBuf
+  <span class="hljs-keyword">var</span> cacheBufLen = <span class="hljs-number">8</span>
+  <span class="hljs-keyword">var</span> openID = <span class="hljs-keyword">new</span> Buffer(<span class="hljs-string">'{"id":"'</span>)
+  <span class="hljs-keyword">var</span> closeIDOpenSeq = <span class="hljs-keyword">new</span> Buffer(<span class="hljs-string">'","seq":"'</span>)
+  <span class="hljs-keyword">var</span> closeSeq = <span class="hljs-keyword">new</span> Buffer(<span class="hljs-string">'"}\n'</span>)
+  <span class="hljs-keyword">var</span> stream = through(transform, flush)
+
+  <span class="hljs-keyword">return</span> stream
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transform</span><span class="hljs-params">(buf, enc, next)</span> </span>{
+    <span class="hljs-keyword">if</span> (buf[<span class="hljs-number">0</span>] === <span class="hljs-number">62</span>) { <span class="hljs-comment">// If line starts with '&gt;', this is an ID</span>
+      <span class="hljs-keyword">if</span> (cacheBuf) { <span class="hljs-comment">// If a previous object is in cache, push it</span>
+        cacheBuf = Buffer.concat([cacheBuf, closeSeq], cacheBufLen+<span class="hljs-number">3</span>)
+        <span class="hljs-keyword">this</span>.push(cacheBuf)
+      }
+      <span class="hljs-keyword">var</span> id = buf.toString().slice(<span class="hljs-number">1</span>).trim().replace(<span class="hljs-regexp">/"/g</span>, <span class="hljs-string">'\\"'</span>)
+      cacheBufLen = id.length + <span class="hljs-number">16</span>
+      cacheBuf = Buffer.concat([openID, <span class="hljs-keyword">new</span> Buffer(id), closeIDOpenSeq], cacheBufLen)
     }
-  })
-  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> object) {
-    <span class="hljs-keyword">if</span> (!sequenceType){
-      sequenceType = bionode.checkSequenceType(object[key].replace(<span class="hljs-regexp">/-/g</span>,<span class="hljs-string">""</span>))
+    <span class="hljs-keyword">else</span> {
+      cacheBufLen += buf.length
+      cacheBuf = Buffer.concat([cacheBuf, buf], cacheBufLen)
     }
-    <span class="hljs-keyword">if</span>(aligned || containsGap){
-      array.push({name: key, seqType: sequenceType, seq: object[key].replace(<span class="hljs-regexp">/-/g</span>,<span class="hljs-string">""</span>), aligned: object[key]})
-    }
-    <span class="hljs-keyword">else</span>{
-      array.push({name: key, seq: object[key], seqType: sequenceType})
+    next()
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">flush</span><span class="hljs-params">()</span> </span>{
+    cacheBuf = Buffer.concat([cacheBuf, closeSeq], cacheBufLen+<span class="hljs-number">3</span>)
+    <span class="hljs-keyword">this</span>.push(cacheBuf)
+    <span class="hljs-keyword">this</span>.push(<span class="hljs-literal">null</span>)
+  }
+}
+
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">paramsParser</span><span class="hljs-params">(arg1, arg2, arg3)</span> </span>{
+  <span class="hljs-keyword">var</span> params = {}
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> arg1 === <span class="hljs-string">'object'</span>) {
+    params.options = arg1
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> arg2 === <span class="hljs-string">'string'</span>) {
+      params.filename = arg2
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> arg3 === <span class="hljs-string">'function'</span>) {
+        params.callback = arg3
+      }
     }
   }
-  <span class="hljs-keyword">return</span> array
-}</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h3 id="create-sequence-alignment-format">Create sequence/alignment format</h3>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>Create sequence/alignment format from an array of sequence objects</p>
-<pre><code><span class="hljs-comment">//Sample sequence array</span>
-<span class="hljs-built_in">console</span>.log(sequences);
-=&gt; [ { name: <span class="hljs-string">'SEQUENCE_1'</span>,
-       seq: <span class="hljs-string">'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKIPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTLMGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL'</span> },
-     { name: <span class="hljs-string">'SEQUENCE_2'</span>,
-       seq: <span class="hljs-string">'SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQIATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH'</span> } ]
-
-bionodeFasta.createFormat(sequences);
-=&gt; &gt;SEQUENCE_1
-   MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG
-   LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK
-   IPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTL
-   MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL
-   &gt;SEQUENCE_2
-   SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQI
-   ATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH
-</code></pre>
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>BionodeFasta.prototype.createFasta = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(sequenceArray, aligned)</span> </span>{
-  <span class="hljs-keyword">var</span> string = <span class="hljs-string">""</span>
-  sequenceArray.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(sequence)</span></span>{
-    string += <span class="hljs-string">"&gt;"</span>+sequence.name+<span class="hljs-string">"\n"</span>
-    <span class="hljs-keyword">var</span> lines = [];
-    <span class="hljs-keyword">if</span> (aligned &amp;&amp; sequence.aligned){
-      lines = sequence.aligned.match(<span class="hljs-regexp">/.{1,60}/g</span>)
+  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> arg1 === <span class="hljs-string">'string'</span>) {
+    params.options = {}
+    params.filename = arg1
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> arg2 === <span class="hljs-string">'function'</span>) {
+      params.callback = arg2
     }
-    <span class="hljs-keyword">else</span>{
-      lines = sequence.seq.match(<span class="hljs-regexp">/.{1,60}/g</span>)
-    }
-    lines.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(line)</span></span>{
-      string += line+<span class="hljs-string">"\n"</span>
-    })
-  })
-  <span class="hljs-keyword">return</span> string.slice(<span class="hljs-number">0</span>, -<span class="hljs-number">1</span>)
+  }
+  <span class="hljs-keyword">else</span> {
+    params.options = {}
+  }
+  <span class="hljs-keyword">return</span> params
 }</pre></div></div>
             
         </li>

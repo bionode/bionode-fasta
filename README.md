@@ -5,10 +5,15 @@
   <br/>
   <a href="http://bionode.io/">bionode.io</a>
 </p>
-# bionode-fasta [![Build status](https://travis-ci.org/bionode/bionode-fasta.svg?branch=master "Build status")](https://travis-ci.org/bionode/bionode-fasta)
+# bionode-fasta
+> Streamable FASTA parser.
 
-
-> FASTA format parser for bionode
+[![NPM version][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+[![Coveralls Status][coveralls-image]][coveralls-url]
+[![Dependency Status][depstat-image]][depstat-url]
+[![Gitter chat][gitter-image]][gitter-url]
+[![DOI][doi-image]][doi-url]
 
 
 Install
@@ -29,30 +34,31 @@ Usage
 If you are using ```bionode-fasta``` with Node.js, you can require the module:
 
 ```js
-var bionodeFasta = require('bionode-fasta')
-//Sample FASTA file
-console.log(sampleFASTA);
-=> >SEQUENCE_1
-   MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG
-   LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK
-   IPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTL
-   MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL
-   >SEQUENCE_2
-   SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQI
-   ATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH
+var fasta = require('bionode-fasta')
 
-bionodeFasta.readFasta(sampleFASTA);
-=> [ { name: 'SEQUENCE_1',
-       seq: 'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKIPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTLMGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL' },
-     { name: 'SEQUENCE_2',
-       seq: 'SATVSEINSETDFVAKNDQFIALTKDTTAHIQSNSLQSVEELHSSTINGVKFEEYLKSQIATIGENLVVRRFATLKAGANGVVNGYIHTNGRVGVVIAAACDSAEVASKSRDLLRQICMH' } ]
+fasta('./input.fasta').pipe(process.stdout) // Returns Buffers
+fasta.obj('./input.fasta').on('data', console.log) // Returns Objects
+fs.createReadStream('./input.fasta').pipe(fasta()) // Parses streamed content
+fs.createReadStream('./fasta-list.txt')
+.pipe(split())
+.pipe(fasta({filenameMode: true})) // Parses files from filename Strings
+
+=>   { id: 'sequence1',
+       seq: 'ATGCACGTCACGTCAGTACTCGTCAGTAC' }
+     { id: 'sequence2',
+       seq: 'CAGTCCTACTGCATGCATGCATGCATGCATCGATGCATGTCGACTGCATGCATGC' }
+
+fasta.obj({includePath: true}, './input.fasta').on('data', console.log) // Returns Objects
+=>   { id: 'sequence1',
+       seq: 'ATGCACGTCACGTCAGTACTCGTCAGTAC'
+       path: './input.fasta' }
 ```
 
 Please read the [documentation](http://rawgit.com/bionode/bionode-fasta/master/docs/bionode-fasta.html) for the methods exposed by bionode-fasta.
 
-### Command line examples
+### Command line example
 ```sh
-$ bionode-fasta readFasta ~/sequences.fa
+$ bionode-fasta input.fasta output.json
 ```
 
 Contributing
@@ -87,6 +93,7 @@ Check the [issues](http://github.com/bionode/bionode-fasta/issues) for ways to c
 
 Contacts
 --------
+Bruno Vieira <[mail@bmpvieira.com](mailto:mail@bmpvieira.com)> [@bmpvieira](//twitter.com/bmpvieira)  
 Alan Rice <[alanmrice@gmail.com](mailto:alanmrice@gmail.com)> [@alanmrice](//twitter.com/alanmrice)
 
 License
@@ -94,3 +101,18 @@ License
 
 bionode-fasta is licensed under the [MIT](https://raw.github.com/bionode/bionode-fasta/master/LICENSE) license.  
 Check [ChooseALicense.com](http://choosealicense.com/licenses/mit) for details.
+
+[npm-url]: http://npmjs.org/package/bionode-fasta
+[npm-image]: http://img.shields.io/npm/v/bionode-fasta.svg?style=flat
+[travis-url]: http:////travis-ci.org/bionode/bionode-fasta
+[travis-image]: http://img.shields.io/travis/bionode/bionode-fasta.svg?style=flat
+[coveralls-url]: http:////coveralls.io/r/bionode/bionode-fasta
+[coveralls-image]: http://img.shields.io/coveralls/bionode/bionode-fasta.svg?style=flat
+[depstat-url]: http://david-dm.org/bionode/bionode-fasta
+[depstat-image]: http://img.shields.io/david/bionode/bionode-fasta.svg?style=flat
+[gitter-image]: http://img.shields.io/badge/gitter-bionode/bionode--fasta-brightgreen.svg?style=flat
+[gitter-url]: https://gitter.im/bionode/bionode-fasta
+[doi-url]: http://dx.doi.org/??.????/zenodo.?????
+[doi-image]: http://img.shields.io/badge/doi-??.????/zenodo.?????-blue.svg?style=flat
+
+[![Bitdeli Badge](http://d2weczhvl823v0.cloudfront.net/bionode/bionode-fasta/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

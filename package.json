@@ -1,33 +1,31 @@
 {
   "name": "bionode-fasta",
-  "version": "0.1.0",
-  "description": "FASTA parser for bionode",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha --reporter spec",
-    "coverage": "istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec && rm -rf ./coverage",
-    "coveralls": "istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
-    "build-browser": "webpack",
-    "build-docs": "docco ./lib/bionode-fasta.js"
+  "description": "Streamable FASTA parser",
+  "version": "0.2.0",
+  "homepage": "http://bionode.io",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bionode/bionode-fasta.git"
   },
-  "keywords": [
-    "bioinformatics",
-    "fasta",
-    "bionode"
-  ],
-  "author": "Alan Rice",
+  "author": {
+    "name": "Bruno Vieira",
+    "email": "mail@bmpvieira.com"
+  },
   "license": "MIT",
-  "bin": {
-    "bionode-fasta": "cli.js"
-  },
   "dependencies": {
-    "bionode": "bionode/bionode"
+    "zlib": "~1.0.5",
+    "through2": "~0.5.1",
+    "split": "~0.3.0",
+    "pumpify": "~1.3.0",
+    "concat-stream": "~1.4.6",
+    "minimist": "~0.2.0",
+    "browserify": "~5.9.1"
   },
   "devDependencies": {
-    "mocha": "~1.17.0",
+    "mocha": "~1.21.4",
     "mocha-lcov-reporter": "0.0.1",
-    "should": "~3.0.1",
-    "istanbul": "~0.2.4",
+    "should": "~4.0.4",
+    "istanbul": "~0.3.0",
     "coveralls": "~2.6.1",
     "gulp": "~3.4.0",
     "gulp-util": "~2.2.12",
@@ -35,10 +33,45 @@
     "tiny-lr": "0.0.5",
     "webpack": "~1.3.1-beta8",
     "docco": "~0.6.2",
-    "contributor": "^0.1.16"
+    "contributor": "~0.1.22",
+    "uglify-js": "~2.4.15"
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/bionode/bionode-fasta.git"
-  }
+  "keywords": [
+    "bio",
+    "biology",
+    "bioinformatics",
+    "bionode",
+    "fasta",
+    "parser",
+    "streams",
+    "cli",
+    "science"
+  ],
+  "main": "index.js",
+  "bin": {
+    "bionode-fasta": "cli.js"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "coverage": "istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec && rm -rf ./coverage",
+    "coveralls": "istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
+    "build-browser": "browserify index.js | uglifyjs > bionode-fasta.min.js",
+    "build-docs": "docco ./lib/bionode-fasta.js"
+  },
+  "contributors": [
+    {
+      "name": "Alan Rice",
+      "email": "alanmrice@gmail.com",
+      "url": "https://github.com/alanrice",
+      "contributions": 12,
+      "hireable": false
+    },
+    {
+      "name": "Bruno Vieira",
+      "email": "mail@bmpvieira.com",
+      "url": "https://github.com/bmpvieira",
+      "contributions": 1,
+      "hireable": false
+    }
+  ]
 }

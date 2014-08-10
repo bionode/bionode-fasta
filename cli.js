@@ -1,17 +1,25 @@
 #!/usr/bin/env node
 var fs = require('fs')
 var path = require('path')
-var bionodeFasta = require('./')
+var minimist = require('minimist')
+var fasta = require('./')
 
-var args = process.argv.slice(2)
+var argv = minimist(process.argv.slice(2), { boolean: ['p', 'path'] });
 
-if(args.length < 1){
-  process.stdout.write('Not enough arguments used. Check function usage.\n')
-  process.exit(1)
+if (argv.help) {
+  return console.log(
+    'Usage: bionode-ncbi <options> <fasta file [required]> <output file>\n\n' +
+    'You can also use fasta files compressed with gzip\n' +
+    'If no output is provided, the result will be printed to stdout\n\n' +
+    'Options: -p, --path: Includes the path of the original file as a property of the output objects\n\n'
+  )
 }
 
-fs.readFile(path.resolve(args[1]), function (err, data) {
-  if (err) throw err
-  var bionodeOutput = bionodeFasta[args[0]](data, args[3], args[4])
-  process.stdout.write(JSON.stringify(bionodeOutput) + '\n')
-});
+var options = {}
+if (argv.p || argv.path) { options.includePath = true }
+if (!argv._[0]) { return console.log('Please provide a path to a fasta file.') }
+
+var output = argv._[1] ? fs.createWriteStream(argv._[1]) : process.stdout
+
+fasta(options, argv._[0])
+.pipe(output)
