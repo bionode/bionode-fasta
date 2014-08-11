@@ -1,47 +1,42 @@
 var fs = require('fs')
-var should = require('should')
+var test = require('tape')
 var fasta = require('../')
 var data = require('./data')
 
-require('mocha')
+var file = fs.readFileSync('./test/test.fasta')
 
-describe("Read a fasta file and pipe content to parser.", function() {
-  it("should return a Buffer for each sequence", function(done) {
+
+test('Read a fasta file and pipe content to parser.', function (t) {
+  t.plan(3)
+  var msg
+  var pushFunc
+
+
+  msg = 'should return a Buffer for each sequence'
+  testPipeParser(msg, fasta(), true)
+
+  msg = 'should return an Object for each sequence'
+  testPipeParser(msg, fasta({ objectMode: true }))
+
+  msg = 'should return an Object for each sequence (shortcut version)'
+  testPipeParser(msg, fasta.obj())
+
+
+  function testPipeParser(msg, parser, jsparse) {
     var result = []
-    fs.createReadStream('./test/test.fasta')
-    .pipe(fasta())
+
+    parser
     .on('data', pushResult)
-    .on('end', testResult)
-    function pushResult(data) { result.push(JSON.parse(data.toString())) }
-    function testResult() {
-      result.should.eql(data.fasta)
-      done()
+    .on('end', function() { t.deepEqual(result, data.fasta, msg) })
+
+    function pushResult(data) {
+      if (jsparse) { data = JSON.parse(data.toString()) }
+      result.push(data)
     }
-  })
-  it("should return an Object for each sequence", function(done) {
-    var result = []
-    fs.createReadStream('./test/test.fasta')
-    .pipe(fasta({ objectMode: true }))
-    .on('data', pushResult)
-    .on('end', testResult)
-    function pushResult(data) { result.push(data) }
-    function testResult() {
-      result.should.eql(data.fasta)
-      done()
-    }
-  })
-  it("should return an Object for each sequence (shortcut version)", function(done) {
-    var result = []
-    fs.createReadStream('./test/test.fasta')
-    .pipe(fasta.obj())
-    .on('data', pushResult)
-    .on('end', testResult)
-    function pushResult(data) { result.push(data) }
-    function testResult() {
-      result.should.eql(data.fasta)
-      done()
-    }
-  })
+
+    parser.write(file)
+    parser.end()
+  }
 })
 
 testFilename('./test/test.fasta')
@@ -51,9 +46,9 @@ testFilename('./test/test.fasta.gz', true)
 
 function testFilename(file, includePath) {
   var solution = JSON.parse(JSON.stringify(data.fasta))
-  var extra = ''
+  var extramsg = ''
   if (includePath) {
-    extra = ' (add path to results)'
+    extramsg = ' (add path to results)'
     solution.forEach(addPath)
     function addPath(obj, i) {
       obj.path = file
@@ -62,101 +57,92 @@ function testFilename(file, includePath) {
   }
 
   if ('gz' === file.split('.').pop()) {
-    extra += ' (read gzipped file)'
+    extramsg += ' (read gzipped file)'
   }
 
-  describe("Use parser to read file by passing filename" + extra, function() {
-    it("should return a Buffer for each sequence", function(done) {
+  test('Use parser to read file by passing filename' + extramsg, function (t) {
+    t.plan(3)
+    var msg
+    var parser
+    var pushFunc
+
+
+    msg = 'should return a Buffer for each sequence'
+    parser = includePath ? fasta({ includePath: true }, file) : fasta(file)
+    testFilenamePipe(msg, parser, true)
+
+    msg = 'should return an Object for each sequence'
+    var options = { objectMode: true }
+    if (includePath) { options.includePath = true }
+    parser = fasta(options, file)
+    testFilenamePipe(msg, parser)
+
+    msg = 'should return an Object for each sequence (shortcut version)'
+    parser = includePath ? fasta.obj({ includePath: true }, file) : fasta.obj(file)
+    testFilenamePipe(msg, parser)
+
+
+    function testFilenamePipe(msg, parser, jsparse) {
       var result = []
-      var parser = includePath ? fasta({ includePath: true }, file) : fasta(file)
       parser
       .on('data', pushResult)
-      .on('end', testResult)
-      function pushResult(data) { result.push(JSON.parse(data.toString())) }
-      function testResult() {
-        result.should.eql(solution)
-        done()
+      .on('end', function() { t.deepEqual(result, solution, msg) })
+      function pushResult(data) {
+        if (jsparse) { data = JSON.parse(data.toString()) }
+        result.push(data)
       }
-    })
-    it("should return an Object for each sequence", function(done) {
-      var result = []
-      var options = { objectMode: true }
-      if (includePath) { options.includePath = true }
-      fasta(options, file)
-      .on('data', pushResult)
-      .on('end', testResult)
-      function pushResult(data) { result.push(data) }
-      function testResult() {
-        result.should.eql(solution)
-        done()
-      }
-    })
-    it("should return an Object for each sequence (shortcut version)", function(done) {
-      var result = []
-      var parser = includePath ? fasta.obj({ includePath: true }, file) : fasta.obj(file)
-      parser
-      .on('data', pushResult)
-      .on('end', testResult)
-      function pushResult(data) { result.push(data) }
-      function testResult() {
-        result.should.eql(solution)
-        done()
-      }
-    })
+    }
   })
 
+  test('Use parser to read file by passing filename and get results with callback' + extramsg, function (t) {
+    t.plan(6)
 
-  describe("Use parser to read file by passing filename and get results with callback" + extra, function() {
-    it("should return a Buffer with all sequences objects separated by newline" + extra, function(done) {
-      if (includePath) {
-        fasta({ includePath: true }, file, callback)
-      }
-      else {
-        fasta(file, callback)
-      }
-      function callback(err, result) {
-        (err === null).should.be.true
-        var objects = []
-        result.toString().split('\n').forEach(pushObject)
-        function pushObject(obj) {
-          if (obj !== '') {
-            objects.push(JSON.parse(obj))
-          }
+    if (includePath) {
+      fasta({ includePath: true }, file, callback1)
+    }
+    else {
+      fasta(file, callback1)
+    }
+    function callback1(err, result) {
+      t.error(err, 'callback error should be null')
+      var objects = []
+      result.toString().split('\n').forEach(pushObject)
+      function pushObject(obj) {
+        if (obj !== '') {
+          objects.push(JSON.parse(obj))
         }
-        objects.should.eql(solution)
-        done()
       }
+      var msg = 'should return a Buffer with all sequences objects separated by newline'
+      t.deepEqual(objects, solution, msg)
+    }
+
+
+    var options = { objectMode: true }
+    if (includePath) { options.includePath = true }
+    fasta(options, file, function(err, result) {
+      t.error(err, 'callback error should be null')
+      var msg = 'should return an array of Objects'
+      t.deepEqual(result, solution, msg)
     })
-    it("should return an array of Objects", function(done) {
-      var options = { objectMode: true }
-      if (includePath) { options.includePath = true }
-      fasta(options, file, function(err, result) {
-        result.should.eql(solution)
-        done()
-      })
-    })
-    it("should return an array of Objects", function(done) {
-      if (includePath) {
-        fasta.obj({ includePath: true }, file, callback)
-      }
-      else {
-        fasta.obj(file, callback)
-      }
-      function callback(err, result) {
-        result.should.eql(solution)
-        done()
-      }
-    })
+
+
+    if (includePath) {
+      fasta.obj({ includePath: true }, file, callback2)
+    }
+    else {
+      fasta.obj(file, callback2)
+    }
+    function callback2(err, result) {
+      t.error(err, 'callback error should be null')
+      var msg = 'should return an array of Objects'
+      t.deepEqual(result, solution, msg)
+    }
   })
 }
 
-
-describe("Errors should be caught", function() {
-  it("should return a ENOENT error for non-existing path", function(done) {
-    fasta('./nosuchfile.fasta')
-    .on('error', function(error) {
-      error.code.should.eql('ENOENT')
-      done()
-    })
-  })
+test('Errors should be caught', function(t) {
+  t.plan(1)
+  var msg = 'should return a ENOENT error for non-existing path'
+  fasta('./nosuchfile.fasta')
+  .on('error', function(error) { t.equal(error.code, 'ENOENT', msg) })
 })
