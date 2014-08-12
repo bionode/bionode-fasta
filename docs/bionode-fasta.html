@@ -26,7 +26,7 @@
 <p>Streamable FASTA parser.</p>
 <p>doi: <a href="?">?</a>
 author: <a href="http://bmpvieira.com">Bruno Vieira</a>
-email: <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#x6d;&#x61;&#105;&#108;&#64;&#x62;&#x6d;&#x70;&#118;&#x69;&#101;&#x69;&#114;&#97;&#x2e;&#99;&#x6f;&#109;">&#x6d;&#x61;&#105;&#108;&#64;&#x62;&#x6d;&#x70;&#118;&#x69;&#101;&#x69;&#114;&#97;&#x2e;&#99;&#x6f;&#109;</a>
+email: <a href="&#109;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#109;&#x61;&#105;&#108;&#x40;&#98;&#x6d;&#x70;&#118;&#105;&#x65;&#105;&#x72;&#x61;&#46;&#x63;&#x6f;&#109;">&#109;&#x61;&#105;&#108;&#x40;&#98;&#x6d;&#x70;&#118;&#105;&#x65;&#105;&#x72;&#x61;&#46;&#x63;&#x6f;&#109;</a>
 license: <a href="https://raw.githubusercontent.com/bionode/bionode-fasta/master/LICENSE">MIT</a></p>
 </blockquote>
 <hr>
@@ -59,10 +59,10 @@ $ bionode-fasta input.fasta.gz output.json
             <div class="content"><div class='highlight'><pre>
 <span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>)
 <span class="hljs-keyword">var</span> zlib = <span class="hljs-built_in">require</span>(<span class="hljs-string">'zlib'</span>)
-<span class="hljs-keyword">var</span> split = <span class="hljs-built_in">require</span>(<span class="hljs-string">'split'</span>)
 <span class="hljs-keyword">var</span> through = <span class="hljs-built_in">require</span>(<span class="hljs-string">'through2'</span>)
 <span class="hljs-keyword">var</span> pumpify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'pumpify'</span>)
-<span class="hljs-keyword">var</span> concat = <span class="hljs-built_in">require</span>(<span class="hljs-string">'concat-stream'</span>)</pre></div></div>
+<span class="hljs-keyword">var</span> concat = <span class="hljs-built_in">require</span>(<span class="hljs-string">'concat-stream'</span>)
+<span class="hljs-keyword">var</span> fastaParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fasta-parser'</span>)</pre></div></div>
             
         </li>
         
@@ -101,41 +101,41 @@ to the parser Stream, they can be added to the output Objects</p>
      <span class="hljs-string">"path"</span>: <span class="hljs-string">"./input.fasta"</span> }
 </code></pre><p>The output from the parser can also be available as Objects instead of Buffers</p>
 <pre><code>fasta({objectMode: <span class="hljs-literal">true</span>}, <span class="hljs-string">'./input.fasta'</span>)
-.on(<span class="hljs-string">'data'</span>, console.log)
+.on(<span class="hljs-string">'data'</span>, <span class="hljs-built_in">console</span>.log)
 </code></pre><p>Shortcut version of previous example</p>
-<pre><code>fasta.obj(<span class="hljs-string">'./input.fasta'</span>).on(<span class="hljs-string">'data'</span>, console.log)
+<pre><code>fasta.obj(<span class="hljs-string">'./input.fasta'</span>).on(<span class="hljs-string">'data'</span>, <span class="hljs-built_in">console</span>.log)
 </code></pre><p>Callback style can also be used, however they might not be the best for large files</p>
-<pre><code>fasta.obj(<span class="hljs-string">'./input.fasta'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
-  console.log(data)
+<pre><code>fasta.obj(<span class="hljs-string">'./input.fasta'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> </span>{
+  <span class="hljs-built_in">console</span>.log(data)
 })
 </code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>
-module.exports = fasta
+<span class="hljs-built_in">module</span>.exports = fasta
 
-module.exports.obj = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(arg1, arg2, arg3)</span> {</span>
+<span class="hljs-built_in">module</span>.exports.obj = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(arg1, arg2, arg3)</span> </span>{
   <span class="hljs-keyword">var</span> params = paramsParser(arg1, arg2, arg3)
   params.options.objectMode = <span class="hljs-literal">true</span>
   <span class="hljs-keyword">var</span> stream = fasta(params.options, params.filename, params.callback)
   <span class="hljs-keyword">return</span> stream
 }
 
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fasta</span><span class="hljs-params">(arg1, arg2, arg3)</span> {</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fasta</span><span class="hljs-params">(arg1, arg2, arg3)</span> </span>{
   <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>
   <span class="hljs-keyword">var</span> params = paramsParser(arg1, arg2, arg3)
 
   <span class="hljs-keyword">var</span> jsparse
   <span class="hljs-keyword">var</span> contentParser
   <span class="hljs-keyword">if</span> (params.options.objectMode) {
-    contentParser = pumpify.obj(split(), fastaParser(), jsParse())
+    contentParser = pumpify.obj(fastaParser(), jsParse())
   }
   <span class="hljs-keyword">else</span> {
-    contentParser = pumpify(split(), fastaParser())
+    contentParser = fastaParser()
   }
 
   <span class="hljs-keyword">var</span> filesParser = through.obj(transform)
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transform</span><span class="hljs-params">(obj, enc, next)</span>{</span>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transform</span><span class="hljs-params">(obj, enc, next)</span></span>{
     <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>
     <span class="hljs-keyword">var</span> unzip = <span class="hljs-string">'gz'</span> === obj.split(<span class="hljs-string">'.'</span>).pop() ? zlib.Gunzip() : through()
     <span class="hljs-keyword">var</span> path = params.options.includePath ? includePath(obj) : through()
@@ -153,16 +153,15 @@ module.exports.obj = <span class="hljs-function"><span class="hljs-keyword">func
     <span class="hljs-keyword">var</span> pipeline = pumpit(
       fs.createReadStream(obj),
       unzip,
-      split(),
       fastaParser(),
       path,
       jsparse
     )
 
     pipeline
-    .on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(error)</span> {</span> self.emit(<span class="hljs-string">'error'</span>, error) })
-    .on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span> self.push(data) })
-    .on(<span class="hljs-string">'end'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span> self.push(<span class="hljs-literal">null</span>) })
+    .on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(error)</span> </span>{ self.emit(<span class="hljs-string">'error'</span>, error) })
+    .on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> </span>{ self.push(data) })
+    .on(<span class="hljs-string">'end'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ self.push(<span class="hljs-literal">null</span>) })
 
     next()
   }
@@ -171,17 +170,17 @@ module.exports.obj = <span class="hljs-function"><span class="hljs-keyword">func
   <span class="hljs-keyword">if</span> (params.filename) { stream.write(params.filename) }
   <span class="hljs-keyword">if</span> (params.callback) {
     stream.on(<span class="hljs-string">'error'</span>, params.callback)
-    stream.pipe(concat(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span> params.callback(<span class="hljs-literal">null</span>, data) }))
+    stream.pipe(concat(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> </span>{ params.callback(<span class="hljs-literal">null</span>, data) }))
   }
 
   <span class="hljs-keyword">return</span> stream
 }
 
 
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">includePath</span><span class="hljs-params">(path)</span> {</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">includePath</span><span class="hljs-params">(path)</span> </span>{
   <span class="hljs-keyword">var</span> stream = through(transform)
   <span class="hljs-keyword">return</span> stream
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transform</span><span class="hljs-params">(buf, enc, next)</span> {</span>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transform</span><span class="hljs-params">(buf, enc, next)</span> </span>{
     <span class="hljs-keyword">var</span> openEnd = buf.slice(<span class="hljs-number">0</span>, buf.length-<span class="hljs-number">2</span>)
     <span class="hljs-keyword">var</span> pathBuf = <span class="hljs-keyword">new</span> Buffer(<span class="hljs-string">',"path":"'</span> + path + <span class="hljs-string">'"}\n'</span>)
     <span class="hljs-keyword">var</span> totalLen = buf.length-<span class="hljs-number">2</span> + pathBuf.length
@@ -192,53 +191,17 @@ module.exports.obj = <span class="hljs-function"><span class="hljs-keyword">func
 }
 
 
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">jsParse</span><span class="hljs-params">()</span> {</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">jsParse</span><span class="hljs-params">()</span> </span>{
   <span class="hljs-keyword">var</span> stream = through.obj(transform, flush)
   <span class="hljs-keyword">return</span> stream
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transform</span><span class="hljs-params">(obj, enc, next)</span> {</span>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transform</span><span class="hljs-params">(obj, enc, next)</span> </span>{
     <span class="hljs-keyword">this</span>.push(<span class="hljs-built_in">JSON</span>.parse(obj))
     next()
   }
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">flush</span><span class="hljs-params">()</span> {</span> <span class="hljs-keyword">this</span>.push(<span class="hljs-literal">null</span>) }
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">flush</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">this</span>.push(<span class="hljs-literal">null</span>) }
 }
 
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fastaParser</span><span class="hljs-params">()</span> {</span>
-  <span class="hljs-keyword">var</span> cacheBuf
-  <span class="hljs-keyword">var</span> cacheBufLen = <span class="hljs-number">8</span>
-  <span class="hljs-keyword">var</span> openID = <span class="hljs-keyword">new</span> Buffer(<span class="hljs-string">'{"id":"'</span>)
-  <span class="hljs-keyword">var</span> closeIDOpenSeq = <span class="hljs-keyword">new</span> Buffer(<span class="hljs-string">'","seq":"'</span>)
-  <span class="hljs-keyword">var</span> closeSeq = <span class="hljs-keyword">new</span> Buffer(<span class="hljs-string">'"}\n'</span>)
-  <span class="hljs-keyword">var</span> stream = through(transform, flush)
-
-  <span class="hljs-keyword">return</span> stream
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transform</span><span class="hljs-params">(buf, enc, next)</span> {</span>
-    <span class="hljs-keyword">if</span> (buf[<span class="hljs-number">0</span>] === <span class="hljs-number">62</span>) { <span class="hljs-comment">// If line starts with '&gt;', this is an ID</span>
-      <span class="hljs-keyword">if</span> (cacheBuf) { <span class="hljs-comment">// If a previous object is in cache, push it</span>
-        cacheBuf = Buffer.concat([cacheBuf, closeSeq], cacheBufLen+<span class="hljs-number">3</span>)
-        <span class="hljs-keyword">this</span>.push(cacheBuf)
-      }
-      <span class="hljs-keyword">var</span> id = buf.toString().slice(<span class="hljs-number">1</span>).trim().replace(<span class="hljs-regexp">/"/g</span>, <span class="hljs-string">'\\"'</span>)
-      cacheBufLen = id.length + <span class="hljs-number">16</span>
-      cacheBuf = Buffer.concat([openID, <span class="hljs-keyword">new</span> Buffer(id), closeIDOpenSeq], cacheBufLen)
-    }
-    <span class="hljs-keyword">else</span> {
-      cacheBufLen += buf.length
-      cacheBuf = Buffer.concat([cacheBuf, buf], cacheBufLen)
-    }
-    next()
-  }
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">flush</span><span class="hljs-params">()</span> {</span>
-    cacheBuf = Buffer.concat([cacheBuf, closeSeq], cacheBufLen+<span class="hljs-number">3</span>)
-    <span class="hljs-keyword">this</span>.push(cacheBuf)
-    <span class="hljs-keyword">this</span>.push(<span class="hljs-literal">null</span>)
-  }
-}
-
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">paramsParser</span><span class="hljs-params">(arg1, arg2, arg3)</span> {</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">paramsParser</span><span class="hljs-params">(arg1, arg2, arg3)</span> </span>{
   <span class="hljs-keyword">var</span> params = {}
   <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> arg1 === <span class="hljs-string">'object'</span>) {
     params.options = arg1

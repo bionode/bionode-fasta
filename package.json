@@ -13,11 +13,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "through2": "~0.6.0",
-    "split": "~0.3.0",
-    "pumpify": "~1.3.0",
     "concat-stream": "~1.4.6",
-    "minimist": "~1.1.0"
+    "fasta-parser": "0.0.3",
+    "minimist": "~1.1.0",
+    "pumpify": "~1.3.0",
+    "through2": "~0.6.0"
   },
   "devDependencies": {
     "brfs": "~1.2.0",
