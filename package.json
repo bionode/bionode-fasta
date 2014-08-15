@@ -17,15 +17,18 @@
     "fasta-parser": "0.0.3",
     "minimist": "~1.1.0",
     "pumpify": "~1.3.0",
-    "through2": "~0.6.0"
+    "through2": "~0.6.1"
   },
   "devDependencies": {
-    "brfs": "~1.2.0",
-    "browserify": "^5.9.3",
+    "async": "~0.9.0",
+    "browserify": "git://github.com/bmpvieira/node-browserify.git#working",
+    "browserify-fs": "~1.0.0",
+    "beefy": "^2.1.0",
     "contributor": "~0.1.22",
     "coveralls": "~2.11.1",
     "docco": "~0.6.3",
     "istanbul": "~0.3.0",
+    "request": "~2.40.0",
     "tap-spec": "~0.2.0",
     "tape": "~2.14.0",
     "uglify-js": "~2.4.15"
@@ -45,8 +48,12 @@
   "bin": {
     "bionode-fasta": "cli.js"
   },
+  "browser": {
+    "fs": "browserify-fs"
+  },
   "scripts": {
     "test": "node test/bionode-fasta.js | tap-spec",
+    "test-browser": "browserify test/bionode-fasta.js | testling -x 'open -a \"Google Chrome\"' | tap-spec",
     "coverage": "istanbul cover test/bionode-fasta.js --report lcovonly -- | tap-spec && rm -rf ./coverage",
     "coveralls": "istanbul cover test/bionode-fasta.js --report lcovonly -- | tap-spec && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
     "build-browser": "browserify index.js -r ./index.js:bionode-fasta | uglifyjs > bionode-fasta.min.js",
