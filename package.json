@@ -14,13 +14,13 @@
   "license": "MIT",
   "dependencies": {
     "concat-stream": "~1.4.6",
-    "fasta-parser": "0.0.3",
+    "fasta-parser": "0.1.0",
     "minimist": "~1.1.0",
     "pumpify": "~1.3.0",
     "through2": "~0.6.0"
   },
   "devDependencies": {
-    "brfs": "~1.2.0",
+    "beefy": "^2.1.0",
     "browserify": "^5.9.3",
     "contributor": "~0.1.22",
     "coveralls": "~2.11.1",
