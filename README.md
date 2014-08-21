@@ -94,7 +94,6 @@ Check the [issues](http://github.com/bionode/bionode-fasta/issues) for ways to c
 Contacts
 --------
 Bruno Vieira <[mail@bmpvieira.com](mailto:mail@bmpvieira.com)> [@bmpvieira](//twitter.com/bmpvieira)  
-Alan Rice <[alanmrice@gmail.com](mailto:alanmrice@gmail.com)> [@alanmrice](//twitter.com/alanmrice)
 
 License
 --------
