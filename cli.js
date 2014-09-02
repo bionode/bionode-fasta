@@ -17,9 +17,18 @@ if (argv.help) {
 
 var options = {}
 if (argv.p || argv.path) { options.includePath = true }
-if (!argv._[0]) { return console.log('Please provide a path to a fasta file.') }
 
 var output = argv._[1] ? fs.createWriteStream(argv._[1]) : process.stdout
 
-fasta(options, argv._[0])
-.pipe(output)
+var parser = argv.write ? fasta.write() : fasta(options, argv._[0])
+
+parser.pipe(output)
+
+process.stdin.setEncoding('utf8');
+
+if (!process.stdin.isTTY) {
+  process.stdin.on('data', function(data) {
+    if (data.trim() === '') { return }
+    parser.write(data.trim())
+  })
+}
