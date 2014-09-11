@@ -20,8 +20,12 @@
     "through2": "~0.6.0"
   },
   "devDependencies": {
+    "async": "~0.9.0",
     "beefy": "^2.1.0",
-    "browserify": "^5.9.3",
+    "browserify": "git+https://github.com/bmpvieira/node-browserify#3.46.1/http-browserify-1.6.0-pull-53-61-62",
+    "browserify-fs": "~1.0.0",
+    "beefy": "^2.1.0",
+    "request": "~2.40.0",
     "contributor": "~0.1.22",
     "coveralls": "~2.11.1",
     "docco": "~0.6.3",
@@ -45,8 +49,12 @@
   "bin": {
     "bionode-fasta": "cli.js"
   },
+  "browser": {
+    "fs": "browserify-fs"
+  },
   "scripts": {
     "test": "node test/bionode-fasta.js | tap-spec",
+    "test-browser": "browserify test/bionode-fasta.js | testling -x 'open -a \"Google Chrome\"' | tap-spec",
     "coverage": "istanbul cover test/bionode-fasta.js --report lcovonly -- | tap-spec && rm -rf ./coverage",
     "coveralls": "istanbul cover test/bionode-fasta.js --report lcovonly -- | tap-spec && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
     "build-browser": "browserify index.js -r ./index.js:bionode-fasta | uglifyjs > bionode-fasta.min.js",
