@@ -1,7 +1,7 @@
 {
   "name": "bionode-fasta",
   "description": "Streamable FASTA parser",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "homepage": "http://bionode.io",
   "repository": {
     "type": "git",
@@ -24,7 +24,6 @@
     "beefy": "^2.1.0",
     "browserify": "git+https://github.com/bmpvieira/node-browserify#3.46.1/http-browserify-1.6.0-pull-53-61-62",
     "browserify-fs": "~1.0.0",
-    "beefy": "^2.1.0",
     "request": "~2.40.0",
     "contributor": "~0.1.22",
     "coveralls": "~2.11.1",
