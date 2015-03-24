@@ -24,13 +24,14 @@
     "beefy": "^2.1.0",
     "browserify": "git+https://github.com/bmpvieira/node-browserify#3.46.1/http-browserify-1.6.0-pull-53-61-62",
     "browserify-fs": "~1.0.0",
-    "request": "~2.40.0",
     "contributor": "~0.1.22",
     "coveralls": "~2.11.1",
     "docco": "~0.6.3",
     "istanbul": "~0.3.0",
+    "request": "~2.40.0",
     "tap-spec": "~0.2.0",
     "tape": "~2.14.0",
+    "testling": "^1.7.1",
     "uglify-js": "~2.4.15"
   },
   "keywords": [
