@@ -39,6 +39,9 @@ if (!process.stdin.isTTY) {
     if (data.trim() === '') { return }
     parser.write(data.trim())
   })
+  process.stdin.on('end', function () {
+    parser.end()
+  })
 }
 
 process.stdout.on('error', function (err) {
