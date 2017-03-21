@@ -37,7 +37,7 @@ process.stdin.setEncoding('utf8');
 if (!process.stdin.isTTY) {
   process.stdin.on('data', function(data) {
     if (data.trim() === '') { return }
-    parser.write(data.trim())
+    parser.write(data)
   })
   process.stdin.on('end', function () {
     parser.end()
