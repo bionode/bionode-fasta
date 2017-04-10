@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 var fs = require('fs')
-var path = require('path')
 var minimist = require('minimist')
 var fasta = require('./')
 
@@ -13,7 +12,7 @@ var argv = minimist(process.argv.slice(2), {
 })
 
 if (argv.help) {
-  return console.log(
+  console.log(
     'Usage: bionode-fasta <options> <fasta file [required]> <output file>\n\n' +
     'You can also use fasta files compressed with gzip\n' +
     'If no output is provided, the result will be printed to stdout\n\n' +
@@ -32,10 +31,10 @@ var parser = argv.write ? fasta.write() : fasta(options, argv._[0])
 
 parser.pipe(output)
 
-process.stdin.setEncoding('utf8');
+process.stdin.setEncoding('utf8')
 
 if (!process.stdin.isTTY) {
-  process.stdin.on('data', function(data) {
+  process.stdin.on('data', function (data) {
     if (data.trim() === '') { return }
     parser.write(data)
   })

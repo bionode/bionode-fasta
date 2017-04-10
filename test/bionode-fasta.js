@@ -4,10 +4,6 @@ var request = require('request')
 var async = require('async')
 var fasta = require('../')
 var data = require('./data')
-var zlib = require('zlib')
-var through = require('through2')
-var buffer = require('buffer')
-
 
 // Node.js fs is implemented in the browser by browserify-fs using leveldb.
 // So we need to fetch the file and save it locally (server) or in leveldb (client) with fs.
@@ -16,11 +12,11 @@ var buffer = require('buffer')
 
 async.eachSeries(['test.fasta', 'test.fasta.gz'], download, startTests)
 
-function download(file, callback) {
+function download (file, callback) {
   var proxy = 'http://cors.inb.io/'
   var rooturl = 'https://raw.githubusercontent.com/bionode/bionode-fasta/master/test/'
   fs.mkdir('test', gotDir)
-  function gotDir() {
+  function gotDir () {
     var get = request(proxy + rooturl + file, {encoding: null})
     var write = fs.createWriteStream('test/' + file)
     get.pipe(write)
@@ -28,11 +24,10 @@ function download(file, callback) {
   }
 }
 
-function startTests() {
+function startTests () {
   test('Read a fasta file and pipe content to parser.', function (t) {
     t.plan(3)
     var msg
-    var pushFunc
 
     msg = 'should return a Buffer for each sequence'
     testPipeParser(msg, fasta(), true)
@@ -43,16 +38,15 @@ function startTests() {
     msg = 'should return an Object for each sequence (shortcut version)'
     testPipeParser(msg, fasta.obj())
 
-
-    function testPipeParser(msg, parser, jsparse) {
+    function testPipeParser (msg, parser, jsparse) {
       var result = []
 
       fs.createReadStream('test/test.fasta')
       .pipe(parser)
       .on('data', pushResult)
-      .on('end', function() { t.deepEqual(result, data.fasta, msg) })
+      .on('end', function () { t.deepEqual(result, data.fasta, msg) })
 
-      function pushResult(data) {
+      function pushResult (data) {
         if (jsparse) { data = JSON.parse(data.toString()) }
         result.push(data)
       }
@@ -64,29 +58,28 @@ function startTests() {
   testFilename('test/test.fasta', true)
   testFilename('test/test.fasta.gz', true)
 
-
-  function testFilename(file, includePath) {
+  function testFilename (file, includePath) {
     var solution = JSON.parse(JSON.stringify(data.fasta))
     var extramsg = ''
+
     if (includePath) {
       extramsg = ' (add path to results)'
       solution.forEach(addPath)
-      function addPath(obj, i) {
-        obj.path = file
-        solution[i] = obj
-      }
     }
 
-    if ('gz' === file.split('.').pop()) {
+    function addPath (obj, i) {
+      obj.path = file
+      solution[i] = obj
+    }
+
+    if (file.split('.').pop() === 'gz') {
       extramsg += ' (read gzipped file)'
     }
-
 
     test('Use parser to read file by passing filename' + extramsg, function (t) {
       t.plan(3)
       var msg
       var parser
-      var pushFunc
 
       msg = 'should return a Buffer for each sequence'
       parser = includePath ? fasta({ includePath: true }, file) : fasta(file)
@@ -102,33 +95,31 @@ function startTests() {
       parser = includePath ? fasta.obj({ includePath: true }, file) : fasta.obj(file)
       testFilenamePipe(msg, parser)
 
-      function testFilenamePipe(msg, parser, jsparse) {
+      function testFilenamePipe (msg, parser, jsparse) {
         var result = []
         parser
         .on('data', pushResult)
-        .on('end', function() { t.deepEqual(result, solution, msg) })
-        function pushResult(data) {
+        .on('end', function () { t.deepEqual(result, solution, msg) })
+        function pushResult (data) {
           if (jsparse) { data = JSON.parse(data.toString()) }
           result.push(data)
         }
       }
     })
 
-
     test('Use parser to read file by passing filename and get results with callback' + extramsg, function (t) {
       t.plan(6)
 
       if (includePath) {
         fasta({ includePath: true }, file, callback1)
-      }
-      else {
+      } else {
         fasta(file, callback1)
       }
-      function callback1(err, result) {
+      function callback1 (err, result) {
         t.error(err, 'callback error should be null')
         var objects = []
         result.toString().split('\n').forEach(pushObject)
-        function pushObject(obj) {
+        function pushObject (obj) {
           if (obj !== '') {
             objects.push(JSON.parse(obj))
           }
@@ -137,23 +128,20 @@ function startTests() {
         t.deepEqual(objects, solution, msg)
       }
 
-
       var options = { objectMode: true }
       if (includePath) { options.includePath = true }
-      fasta(options, file, function(err, result) {
+      fasta(options, file, function (err, result) {
         t.error(err, 'callback error should be null')
         var msg = 'should return an array of Objects'
         t.deepEqual(result, solution, msg)
       })
 
-
       if (includePath) {
         fasta.obj({ includePath: true }, file, callback2)
-      }
-      else {
+      } else {
         fasta.obj(file, callback2)
       }
-      function callback2(err, result) {
+      function callback2 (err, result) {
         t.error(err, 'callback error should be null')
         var msg = 'should return an array of Objects'
         t.deepEqual(result, solution, msg)
@@ -161,11 +149,10 @@ function startTests() {
     })
   }
 
-
-  test('Errors should be caught', function(t) {
+  test('Errors should be caught', function (t) {
     t.plan(1)
     var msg = 'should return a ENOENT error for non-existing path'
     fasta('./nosuchfile.fasta')
-    .on('error', function(error) { t.equal(error.code, 'ENOENT', msg) })
+    .on('error', function (error) { t.equal(error.code, 'ENOENT', msg) })
   })
 }
