@@ -30,6 +30,7 @@
     "docco": "~0.6.3",
     "istanbul": "~0.3.0",
     "request": "~2.40.0",
+    "standard": "^10.0.1",
     "tap-spec": "~0.2.0",
     "tape": "~2.14.0",
     "testling": "^1.7.1",
@@ -54,7 +55,7 @@
     "fs": "browserify-fs"
   },
   "scripts": {
-    "test": "node test/bionode-fasta.js | tap-spec",
+    "test": "standard && node test/bionode-fasta.js | tap-spec",
     "test-browser": "browserify test/bionode-fasta.js | testling -x 'open -a \"Google Chrome\"' | tap-spec",
     "coverage": "istanbul cover test/bionode-fasta.js --report lcovonly -- | tap-spec && rm -rf ./coverage",
     "coveralls": "istanbul cover test/bionode-fasta.js --report lcovonly -- | tap-spec && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
