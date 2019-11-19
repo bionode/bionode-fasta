@@ -112,7 +112,7 @@ Check [ChooseALicense.com](http://choosealicense.com/licenses/mit) for details.
 [depstat-image]: http://img.shields.io/david/bionode/bionode-fasta.svg?style=flat
 [gitter-image]: http://img.shields.io/badge/gitter-bionode/bionode--fasta-brightgreen.svg?style=flat
 [gitter-url]: https://gitter.im/bionode/bionode-fasta
-[doi-url]: http://dx.doi.org/10.5281/zenodo.11307
+[doi-url]: https://doi.org/10.5281/zenodo.11307
 [doi-image]: http://img.shields.io/badge/doi-10.5281/zenodo.11307-blue.svg?style=flat
 
 [![Bitdeli Badge](http://d2weczhvl823v0.cloudfront.net/bionode/bionode-fasta/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
